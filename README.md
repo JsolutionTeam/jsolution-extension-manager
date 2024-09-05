@@ -1,0 +1,1 @@
+# jsolution-extension-manager

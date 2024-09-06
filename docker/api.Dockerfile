@@ -1,6 +1,6 @@
 FROM --platform=linux/amd64 eclipse-temurin:17-jre-alpine
 
-COPY ./api/build/libs/*-SNAPSHOT.jar ./app.jar
+COPY ./api/build/libs/api.jar ./app.jar
 
 EXPOSE 8080
 

@@ -22,12 +22,14 @@ class MinioFileService(
 ) : FileService(
     filePathPrefix = "$minioServiceEndpoint/$defaultBucketName",
 ) {
-    private val logger: Logger = LoggerFactory.getLogger(this.javaClass)
+    private val log: Logger = LoggerFactory.getLogger(this.javaClass)
 
     override fun addFile(multipartFile: MultipartFile): FileDto {
         val file = super.getValidatedFile(multipartFile)
+        log.info("파일 업로드 : $file")
 
         runCatching {
+            log.info("파일 업로드 시작 : ${file.originalName}")
             minioClient.putObject(
                 PutObjectArgs.builder()
                     .bucket(defaultBucketName)
@@ -36,7 +38,7 @@ class MinioFileService(
                     .build(),
             )
         }.onFailure {
-            logger.error("${file.originalName} 파일 업로드 실패 : ${it.message}")
+            log.error("${file.originalName} 파일 업로드 실패 : ${it.message}")
             throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드를 실패했습니다.")
         }.getOrThrow()
 
@@ -58,10 +60,10 @@ class MinioFileService(
                     .build(),
             )
         }.onFailure {
-            logger.error("$filename 파일 삭제 실패")
+            log.error("$filename 파일 삭제 실패")
             return false
         }
-        logger.info("$filename 파일 삭제 성공")
+        log.info("$filename 파일 삭제 성공")
         return true
     }
 
@@ -75,13 +77,13 @@ class MinioFileService(
                     .build(),
             )
             results.forEach {
-                logger.info(it.get().objectName() + it.get().message())
+                log.info(it.get().objectName() + it.get().message())
             }
         }.onFailure {
-            logger.error("$filenames 파일 삭제 실패")
+            log.error("$filenames 파일 삭제 실패")
             return false
         }
-        logger.info("$filenames 파일 삭제 성공")
+        log.info("$filenames 파일 삭제 성공")
         return true
     }
 
@@ -111,7 +113,7 @@ class MinioFileService(
                     .build(),
             ).map { it.get() }
         }.onFailure {
-            logger.error("파일 리스트 조회 실패")
+            log.error("파일 리스트 조회 실패")
             throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "파일 리스트 조회를 실패했습니다.")
         }.getOrThrow()
     }

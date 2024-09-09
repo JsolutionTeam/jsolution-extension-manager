@@ -5,7 +5,7 @@ import kr.co.jsol.jem.common.infrastructure.dto.BaseEntityDto
 import kr.co.jsol.jem.extension.domain.Extension
 import kr.co.jsol.jem.file.application.dto.FileDto
 
-@Schema(name = "검사실 응답")
+@Schema(name = "확장프로그램 응답")
 class ExtensionDto(extension: Extension) : BaseEntityDto(extension) {
     @field:Schema(description = "버전값 입력")
     val version: String = extension.version

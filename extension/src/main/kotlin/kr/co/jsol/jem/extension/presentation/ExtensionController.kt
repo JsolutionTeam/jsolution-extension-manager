@@ -52,7 +52,7 @@ class ExtensionController(
         @AuthenticationPrincipal userDetails: UserDetailsImpl,
     ): ExtensionDto {
         val updateExtensionDto = UpdateExtensionDto(id, version, folder, file)
-        println("updateExtensionDto = $updateExtensionDto")
+        log.info("updateExtensionDto = $updateExtensionDto")
         return extensionService.update(updateExtensionDto, userDetails)
     }
 

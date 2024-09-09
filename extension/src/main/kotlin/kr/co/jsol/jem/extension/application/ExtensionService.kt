@@ -9,6 +9,7 @@ import kr.co.jsol.jem.extension.infrastructure.query.ExtensionQueryRepository
 import kr.co.jsol.jem.file.application.FileService
 import kr.co.jsol.jem.file.application.dto.FileDto
 import kr.co.jsol.jem.file.domain.File
+import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.security.core.userdetails.UserDetails
@@ -21,8 +22,10 @@ class ExtensionService(
     private val mapper: ExtensionMapper,
     private val fileService: FileService,
 ) {
-
+    private final val log = LoggerFactory.getLogger(this.javaClass)
     fun update(updateExtensionDto: UpdateExtensionDto, userDetails: UserDetails): ExtensionDto {
+        log.info("updateExtensionDto = $updateExtensionDto")
+        // 파일 저장
         val fileDto: FileDto = fileService.addFile(updateExtensionDto.file)
         val file = File(
             fileDto.originalName,
@@ -31,6 +34,7 @@ class ExtensionService(
             fileDto.downloadUrl,
             fileDto.size,
         )
+        log.info("file = $file")
         // 입력받은 정보로 강제저장
         val extension: Extension = mapper.createExtension(
             updateExtensionDto.id,
@@ -38,6 +42,7 @@ class ExtensionService(
             updateExtensionDto.folder,
             file,
         )
+        log.info("extension = $extension")
 
         // 저장
         command.save(extension)

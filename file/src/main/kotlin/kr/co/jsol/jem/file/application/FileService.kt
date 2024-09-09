@@ -8,6 +8,7 @@ import org.springframework.web.server.ResponseStatusException
 import java.util.UUID
 
 abstract class FileService(val filePathPrefix: String) {
+
     fun getValidatedFile(multipartFile: MultipartFile): FileDto {
         if (multipartFile.isEmpty) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "파일이 없습니다.")
